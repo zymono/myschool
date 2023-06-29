@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script type="module">
+    if (window.localStorage.getItem('buid')) {} else {
+      window.location = '/flows/login/'
+    }
+  </script>
+  <!-- <script type="module" src="/backend/account.js">checkPlans()</script> -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  
+  <script src="check.js" type="module">
+    if (window.localStorage.getItem('uid') == null) {
+      window.location.href = '/auth/?b=' + window.location
+    } else {
+      // let mySound = new Audio('/music/welcome.mp3')
+      // mySound.play()
+    }
+
+  </script>
+  <link rel="icon" type="image/x-icon" href="/images/fav.png">
+  <title>Report | Zymono</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <!--     <nav id='menu'>
+  <input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label>
+  <ul>
+    <li><a href='/'>Home</a></li>
+    <li><a href='/report'>Report</a></li>
+    <li><a href='/contact'>Contact</a></li>
+    <li><a href='/pricing'>Pricing</a></li>
+  </ul>
+</nav> -->
+</head>
+
+<body>
+  <div class="container">
+    <div class="main-content">
+      <br>
+  <img id="banner" src="//zymono.com/images/zymono.png" width="500" height="300">
+  <h1 id="desc">Report</h4>
+  <h3 id="domain"></h3>
+    <h4>If There Is An Immediate Threat To Your Life, Call <u>911</u></h4>
+<!--   <a href='//loadimg.zymono.repl.co' id="evidence">
+        <button>Upload Evidence</button>
+      </a><br> -->
+    <form id="reportForm">
+      <input type="file" id="image-input" accept=".jpg, .jpeg, .png .svg" max-size="32MB"><br>
+      <input placeholder="Violators Name" id="name" type="text" maxlength="30" required><br>
+      <input placeholder="Reason of Report" id="reason" type="text" maxlength="20" required><br>
+
+      <!--     <input type="file" id="myFile" name="filename"><br><br> -->
+      <p>By click Report Player, you agree to the <a href="/policy/terms.html">Zymono Terms of Service</a>, <a href="/policy/privacy.html">Zymono Privacy Policy</a>, <a href="https://policies.google.com/privacy">Google Privacy Policy</a>, and your school's Terms of Service and Privacy Policy.</p>
+      <a href="/reported/">
+
+        <button type="submit" id="submit">Report Violator</button>
+      </a>
+      <!--     onclick="window.open('/reported/')" onclick="window.close"
+     -->
+    </form>
+    <br>
+
+    <script src="script.js" type="module">
+      document.getElementById("submit").href = '/reported/?g=' + new URLSearchParams(location.search).get('g')
+    </script>
+    <script>
+      document.querySelector("#name").value = new URLSearchParams(location.search).get('n')
+      document.querySelector("#platform").value = new URLSearchParams(location.search).get('p')
+      document.querySelector("#reason").value = new URLSearchParams(location.search).get('r')
+
+      if (new URLSearchParams(location.search).get('img')) {
+        document.getElementById('image-input').remove()
+      }
+    </script>
+    <!--   <script type="text/javascript" id="zsiqchat">var $zoho=$zoho || {};$zoho.salesiq = $zoho.salesiq || {widgetcode: "e053bff667460fb859f95c245f87047d3340a171da85957cb979ec2b856e28fa", values:{},ready:function(){}};var d=document;s=d.createElement("script");s.type="text/javascript";s.id="zsiqscript";s.defer=true;s.src="https://salesiq.zoho.com/widget";t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);</script> -->
+
+  <script>
+    //MAKE NECCESSARY DARK MODE CHANGES
+    const body = document.querySelector('html');
+    const bgColor = getComputedStyle(body).getPropertyValue('background-color');
+const isDark = bgColor === 'rgb(0, 0, 0)' || bgColor === 'rgba(0, 0, 0, 0)';
+if (isDark) {
+  // Code to execute when the background color is dark
+  document.getElementById('banner').src = '//zymono.com/images/zymono-light.png'
+} else {
+  // Code to execute when the background color is light
+}
+    
+    function policy() {
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        if (document.getElementById('policy').style.display == 'none') {
+          document.getElementById('policy').style.display = 'block'
+        } else {
+          document.getElementById('policy').style.display = 'none'
+        }
+      } else {
+        if (document.getElementById('policy').style.display == 'none') {
+          document.getElementById('policy').style.display = 'block'
+          document.querySelector('.pol').style.right = '600px'
+        } else {
+          document.getElementById('policy').style.display = 'none'
+          document.querySelector('.pol').style.right = '0'
+        }
+      }
+    }
+  </script>
+  <script type="text/javascript" id="zsiqchat">var $zoho=$zoho || {};$zoho.salesiq = $zoho.salesiq || {widgetcode: "e053bff667460fb859f95c245f87047d3340a171da85957cb979ec2b856e28fa", values:{},ready:function(){}};var d=document;s=d.createElement("script");s.type="text/javascript";s.id="zsiqscript";s.defer=true;s.src="https://salesiq.zoho.com/widget";t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);</script>
+</body>
+<footer>
+  <p>© 2023 Zymono. All rights reserved.</p>
+  <!-- <br><br>
+  <p>This Branded Page Is Neither Created Nor Endorsed By Zymono.
+This Branded Page Is Subject To Zymono Terms Of Use. If You Believe That This Branded Page Violates Or Terms Of Use Please Report It <a href="//report.zymono.com/zymono">Here</a>.</p> -->
+</footer>
+    </div>
+    <button onclick="policy()" class="pol">Toggle Policy</button>
+    <div id="policy">
+    <iframe id="policyURL" frameborder="0" style="width:100%; height:100%;"></iframe>
+  </div>
+    <script>
+      document.getElementById('policy').style.display = 'none'
+    </script>
+</div>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Zymono mySchool</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<script>
+  if (window.localStorage.getItem('buid')) {
+    window.location = '/report/'
+  } else {
+    window.location = '/flows/signup/'
+  }
+</script>
+</body>
+
+</html>

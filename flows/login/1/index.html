@@ -1,0 +1,45 @@
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<title>Zymono mySchool</title>
+<script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyDelFI3VdZG_0G_SEMWrmB_WKRcw3ZNWFw",
+  authDomain: "auth-e7b21.firebaseapp.com",
+  projectId: "auth-e7b21",
+  storageBucket: "auth-e7b21.appspot.com",
+  messagingSenderId: "877231972674",
+  appId: "1:877231972674:web:7a629ac207bfca644168db",
+  measurementId: "G-3CMXJWW5B6"
+};
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+      
+ var storage = firebase.storage();
+var storageRef = storage.ref();
+      
+var storageRef = storage.ref().child('zymono/' + new URLSearchParams(location.search).get('u') + '/school');
+  
+  storageRef.getDownloadURL()
+  .then((url) => {
+    // `url` is the download URL for 'images/stars.jpg'
+
+    // This can be downloaded directly:
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'text';
+    xhr.onload = (event) => {
+      var blob = xhr.responseText;
+      console.log(blob)
+      window.localStorage.setItem('school',blob);
+    window.location = '/report/';
+    };
+    xhr.open('GET', url);
+    xhr.send();
+
+    // Or inserted into an <img> element
+    
+  })
+  .catch((error) => {
+    // Handle any errors
+  });
+</script>

@@ -1,0 +1,102 @@
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<title>Zymono mySchool</title>
+
+<div class="container">
+  <form id="signup-form" style="text-align: center;">
+    <img height="180px" src="//zymono.com/images/zymono-light.png">
+    <input type="text" id="school" placeholder="Your School's ID" required>
+    <button type="submit">Create my Account</button>
+  </form>
+</div>
+
+
+<script>
+  // Replace with your own Firebase configuration
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDelFI3VdZG_0G_SEMWrmB_WKRcw3ZNWFw",
+      authDomain: "auth-e7b21.firebaseapp.com",
+      projectId: "auth-e7b21",
+      storageBucket: "auth-e7b21.appspot.com",
+      messagingSenderId: "877231972674",
+      appId: "1:877231972674:web:7a629ac207bfca644168db",
+      measurementId: "G-3CMXJWW5B6"
+    };
+
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+  if (new URLSearchParams(location.search).get('school') !== 'null') {
+    document.getElementById('school').value = new URLSearchParams(location.search).get('school')
+  }
+
+  function saveCloud(where, what) {
+  var sr = where
+
+  const storage = firebase.storage();
+  const storageRef = firebase.storage().ref(sr);
+
+  storageRef.putString(what).then((snapshot) => {
+    console.log(where);
+    window.localStorage.setItem('school', window.btoa(window.btoa(snapshot)))
+    window.location = '/report/'
+  })
+}
+var signupForm = document.getElementById('signup-form');
+  
+  signupForm.addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  var schoolID = window.btoa(window.btoa(document.getElementById('school').value))
+
+    saveCloud(`zymono/${new URLSearchParams(location.search).get('user')}/school`, schoolID)
+});
+
+</script>
+<style>
+  body {
+  background-color: #1f1f1f; /* Dark background color */
+  color: #fff; /* Text color */
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+form {
+  width: 300px;
+  padding: 20px;
+  background-color: #333; /* Dark form background color */
+  border-radius: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #8a4fff; /* Light purple accent color */
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #7226cc; /* Darker purple on hover */
+}
+
+</style>
