@@ -25,7 +25,7 @@ if(window.top != window.self){
   // window.localStorage.setItem('buid', user.uid)
   
   if (window.localStorage.getItem('uid') == null) {
-    window.location.href = '//zymono.com/auth/admin.html?b=' + window.location + '/auth'
+    window.location.href = '//zymono.com/auth/admin.html?b=' + window.location.hostname + '/auth'
   } else {
     // let mySound = new Audio('/music/welcome.mp3')
     // mySound.play()
