@@ -51,7 +51,7 @@ var signupForm = document.getElementById('signup-form');
 
   var schoolID = window.btoa(window.btoa(document.getElementById('school').value))
 
-    window.localStorage.setItem('school', window.btoa(window.btoa(schoolID)))
+    window.localStorage.setItem('school', schoolID)
     saveCloud(`zymono/${new URLSearchParams(location.search).get('user')}/school`, schoolID)
 });
 
