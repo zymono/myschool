@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script type="module">
+    import {checkAccount, checkPerms} from '/backend/account.js'
+    checkAccount()
+    checkPerms()
+  </script>
+  <script>
+    function openIMG(srcURL) {
+      const popup1 = document.querySelector('#imagePreview')
+      popup1.style.display = 'block'
+      document.getElementById('imgPre').src = srcURL
+    }
+  </script>
+  <script type="module" id="test">
+    //   import deleteFile from "./script.js";
+    // window.deleteFile = deleteFile;
+
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyDelFI3VdZG_0G_SEMWrmB_WKRcw3ZNWFw",
+      authDomain: "auth-e7b21.firebaseapp.com",
+      projectId: "auth-e7b21",
+      storageBucket: "auth-e7b21.appspot.com",
+      messagingSenderId: "877231972674",
+      appId: "1:877231972674:web:7a629ac207bfca644168db",
+      measurementId: "G-3CMXJWW5B6"
+    };
+    export default firebaseConfig;
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+
+    import {getStorage, ref, listAll} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+    import {getDownloadURL, deleteObject} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+
+    window.ref = ref;
+    window.deleteObject = deleteObject;
+    // window.ref = ref;
+    // window.ref = ref;
+
+    const storage = getStorage();
+    window.storage = storage;
+
+    // const listall = listAll()
+    window.listAll = listAll
+
+    function openIMG(srcURL) {
+      const popup1 = document.querySelector('#imagePreview')
+      popup1.style.display = 'block'
+      document.getElementById('imgPre').src = srcURL
+    }
+    window.openIMG = openIMG
+  </script>
+
+  <link rel="stylesheet" href="alert.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+
+  <meta charset="UTF-8">
+  <title>Dashboard </title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+
+<body>
+<!--   <button onclick="openTodo()">Open Todo List</button> -->
+<!-- <div id="todo-popup" class="my-popup" style="display: block;">
+  <div class="popup-content">
+    <span class="close" onclick="closeTodo()">&times;</span>
+    <h2>My To-Do List</h2>
+    <form>
+      <input type="text" id="todo-input" placeholder="Enter a task...">
+      <select id="todo-category">
+        <option value="">Select a category...</option>
+        <option value="work">Work</option>
+        <option value="personal">Personal</option>
+        <option value="shopping">Shopping</option>
+        <option value="other">Other</option>
+      </select>
+      <button type="button" onclick="addTodo()">Add</button>
+    </form>
+    <ul id="todo-list"></ul>
+  </div>
+</div> -->
+  
+<!-- New Feature Popup -->
+  <div id="todo-popup" class="my-popup nf" style="display: none;">
+  <div class="popup-content">
+    <span class="close" onclick="closeTodo()">&times;</span>
+    <h2>New Feature</h2>
+    <form>
+      <h1>Get Notifications When You Get Reports <i class="fa-solid fa-bell"></i></h1>
+      <p>Now available on Discord</p>
+      <a href="/tutorials/notifications.html" onclick="window.localStorage.setItem('noP1', 'no')">
+        <div class="popupfield" style="background-color: #8484ff; text-align: center; text-decoration: none;" onclick="">Setup</div>
+      </a>
+    </form>
+  </div>
+</div>
+
+  
+<style>
+/* Style for each to-do list item */
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.todo-item .text {
+  flex-grow: 1;
+}
+
+.todo-item .category {
+  color: #888;
+  margin-right: 10px;
+}
+
+.todo-item .delete {
+  color: #f44336;
+  cursor: pointer;
+}
+</style>
+
+<script>
+  if (window.localStorage.getItem('noP1')) {
+    document.getElementById("todo-popup").style.display = "none"
+  }
+// Load saved items from localStorage
+var todoLS = localStorage.getItem("todoItems")
+var todoItems = JSON.parse(localStorage.getItem("todoItems")) || [];
+var ul = document.getElementById("todo-list");
+
+// Add saved items to the list
+for (var i = 0; i < todoItems.length; i++) {
+  var li = createTodoItem(todoItems[i]);
+  ul.appendChild(li);
+}
+  
+function openTodo() {
+  document.getElementById("todo-popup").style.display = "block";
+
+  // // Clear any existing items in the list
+  // var ul = document.getElementById("todo-list");
+  // ul.innerHTML = "";
+
+  // // Add saved items to the list
+  // for (var i = 0; i < todoItem.length; i++) {
+  //   var li = createTodoItem(todoItems[i]);
+  //   ul.appendChild(li);
+  // }
+}
+
+function closeTodo() {
+  document.getElementById("todo-popup").style.display = "none";
+}
+
+function addTodo() {
+  var input = document.getElementById("todo-input");
+  var category = document.getElementById("todo-category");
+  var ul = document.getElementById("todo-list");
+  var li = createTodoItem(input.value, category.value);
+  ul.appendChild(li);
+  input.value = "";
+  category.value = "";
+
+  // Save updated list to localStorage
+  todoItems.push({ text: li.textContent, category: li.dataset.category });
+  localStorage.setItem("todoItems", JSON.stringify(todoItems));
+}
+
+function deleteTodoItem() {
+  var li = this.parentElement;
+  var text = li.querySelector(".text").textContent;
+
+  // Remove item from the list and update localStorage
+  var index = todoItems.findIndex(item => item.text === text);
+  if (index > -1) {
+    todoItems.splice(index, 1);
+    localStorage.setItem("todoItems", JSON.stringify(todoItems));
+  }
+
+  li.remove();
+}
+
+function createTodoItem(text, category) {
+  var li = document.createElement("li");
+  li.classList.add("todo-item");
+  li.dataset.category = category;
+
+  var categorySpan = document.createElement("span");
+  categorySpan.classList.add("category");
+  categorySpan.appendChild(document.createTextNode(category));
+  li.appendChild(categorySpan);
+  var textSpan = document.createElement("span");
+  textSpan.classList.add("text");
+  textSpan.appendChild(document.createTextNode(text));
+  li.appendChild(textSpan);
+
+  var deleteSpan = document.createElement("span");
+  deleteSpan.classList.add("delete");
+  deleteSpan.innerHTML = "&#128465;";
+  deleteSpan.addEventListener("click", deleteTodoItem);
+  li.appendChild(deleteSpan);
+
+  return li;
+}
+</script>
+
+
+  <!-- partial:index.partial.html -->
+  <header class="header">
+    <div class="header-content responsive-wrapper">
+      <div class="header-logo">
+        <a href="#">
+          <div>
+            <img src="//zymono.com/images/app.png" style="width: 32px;" />
+          </div>
+          <!-- 				<img src="https://assets.codepen.io/285131/untitled-ui.svg" /> -->
+        </a>
+      </div>
+      <div class="header-navigation">
+        <nav class="header-navigation-links">
+          <a href="/"> Home </a>
+          <a href="#" class="selected"> Dashboard </a>
+          <a href="//zymono.com/about.html"> About </a>
+          <a href="//zymono.com/press/"> Press </a>
+          <a href="//zymono.com/policy/terms.html"> TOS </a>
+          <a href="//zymono.com/policy/privacy.html"> Privacy </a>
+        </nav>
+        <div class="header-navigation-actions">
+          <a href="//zymono.com" class="button">
+            <i class="ph-lightning-bold"></i>
+            <span>Zymono</span>
+          </a>
+          <a href="/settings/" class="icon-button">
+            <i class="ph-gear-bold"></i>
+          </a>
+          <a href="#" class="icon-button">
+            <i class="ph-bell-bold"></i>
+          </a>
+          <a href="#" class="avatar">
+            <img src="https://assets.codepen.io/285131/hat-man.png" alt="" id="pfp" />
+            <script>
+              document.getElementById('pfp').src = window.localStorage.getItem('photoURL')
+            </script>
+          </a>
+        </div>
+      </div>
+      <a href="#" class="button">
+        <i class="ph-list-bold"></i>
+        <span>Menu</span>
+      </a>
+    </div>
+  </header>
+  <main class="main">
+    <div class="responsive-wrapper">
+      <div class="main-header">
+        <h1>Dashboard</h1>
+        <div class="search">
+          <input type="text" placeholder="Search" />
+          <button type="submit">
+            <i class="ph-magnifying-glass-bold"></i>
+          </button>
+        </div>
+      </div>
+      <div class="horizontal-tabs">
+        <a href="/me/">My details</a>
+        <a href="/settings/">Settings</a>
+        <!-- <a href="/ur">My Reports</a>
+        <a href="/link/">Link</a> -->
+        <!-- 			<a href="#">Plan</a> -->
+        <!-- 			<a href="#">Billing</a> -->
+        <a href="/support/">Support</a>
+        <!-- 			<a href="#">Notifications</a> -->
+        <a href="/myreports/" class="active">Panel</a>
+        <a href="/api/">API</a>
+      </div>
+      <div class="content-header">
+        <div class="content-header-intro">
+          <h2>Reports</h2>
+          <p>Zymono Offer A Flexible Panel So That Any Platform Can Take Their Moderation System To The Next Level.</p>
+        </div>
+        <div class="content-header-actions">
+          <a href="#" class="button">
+            <i class="ph-faders-bold"></i>
+            <span>Filters</span>
+          </a>
+          <a href="#" class="button">
+            <i class="ph-plus-bold"></i>
+            <span>Request Support</span>
+          </a>
+        </div>
+      </div>
+      <div class="content">
+        <div class="content-panel">
+          <div class="vertical-tabs">
+            <!-- <a id="acc" href="#" class="active">Edit Account Type</a> -->
+            <a id="preview" class="active" onclick="copy()">Copy Report URL</a>
+            <a class="active" id="editURL" onclick="document.querySelector('#popup-form').style.display = 'block';">Edit My School Info</a>
+            <a class="active" href='/me/newteam.html' id="collab">Add Faculty</a>
+            <a class="active" href='/team/' id="team">Edit Faculty</a>
+            <!-- <a class="active" style="cursor: pointer;" id="policy">Edit Report Policy</a> -->
+            <!-- 					<a href="#">Developer tools</a>
+					<a href="#">Communication</a>
+					<a href="#">Productivity</a>
+					<a href="#">Browser tools</a>
+					<a href="#">Marketplace</a> -->
+          </div>
+        </div>
+        <script defer>
+          // document.getElementById("preview").href ='//' + window.location.hostname + '/report/?g=' + window.atob(window.atob(window.localStorage.getItem("uid")))
+          // document.getElementById("acc").addEventListener('click', acc)
+          document.getElementById("preview").addEventListener('click', copy)
+
+          function acc() {
+            if (window.localStorage.getItem('accountType') == 'school') {
+              window.localStorage.removeItem('accountType')
+              document.getElementById("acc").innerText = 'Reset to normal'
+            } else {
+              window.localStorage.setItem('accountType', 'school')
+              document.getElementById("acc").innerText = 'Set to school'
+            }
+          }
+          
+          function copy() {
+            if (window.localStorage.getItem('accountType') == 'school') {
+              copyToClipboard('https://myschool.zymono.com/flows/?s=' + window.atob(window.atob(window.localStorage.getItem("uid"))))
+            } else {
+              copyToClipboard('https://myschool.zymono.com/flows/?s=' + window.atob(window.atob(window.localStorage.getItem("uid"))))
+            }
+            document.getElementById("preview").innerText = 'Copied'
+            setTimeout(function () {
+              // code to be executed after 2 seconds
+              document.getElementById("preview").innerText = 'Copy Report URL'
+            }, 2000);
+          }
+          
+          function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+              .then(() => {
+                console.log('Text copied to clipboard');
+              })
+              .catch(err => {
+                console.error('Error copying text: ', err);
+              });
+          }
+      // document.getElementById("frame1").src ='https://createqr.zymono.repl.co/generate.html?url=' + + window.location.hostname + '/report/?g=' + window.atob(window.atob(window.localStorage.getItem("uid")))
+  // https://createqr.zymono.repl.co/generate.html?url=google.com
+
+        </script>
+        <div class="content-main">
+          <div class="card-grid" id="out">
+            <script>
+              let mySound = new Audio('/music/click.mp3')
+
+              function acceptReport(path, uid11, fileP) {
+                deleteFile(path)
+
+                saveCloud('ur/' + uid11 + '/' + fileP + '/status.txt', "✅ Accepted")
+              }
+
+              function denyReport(path, uid11, fileP) {
+                deleteFile(path)
+
+                saveCloud('ur/' + uid11 + '/' + fileP + '/status.txt', "🚫 Denied")
+              }
+
+              function deleteFile(id) {
+                // Create a reference to the file to delete
+                console.log(id)
+                console.log(document.getElementById(id))
+                document.getElementById(id).remove()
+
+
+
+                mySound.play()
+
+
+
+                var delRef = ref(storage, id + '/name.txt');
+
+                // Delete the file
+                deleteObject(delRef).then(() => {
+                  // File deleted successfully
+                }).catch((error) => {
+                  // Uh-oh, an error occurred!
+                  const err3 = error
+                  createToast('error')
+                });
+
+                var delRef = ref(storage, id + '/platform.txt');
+
+                // Delete the file
+                deleteObject(delRef).then(() => {
+                  // File deleted successfully
+                }).catch((error) => {
+                  // Uh-oh, an error occurred!
+                  const err3 = error
+                  createToast('error')
+                });
+
+                var delRef = ref(storage, id + '/reason.txt');
+
+                // Delete the file
+                deleteObject(delRef).then(() => {
+                  // File deleted successfully
+                }).catch((error) => {
+                  // Uh-oh, an error occurred!
+                  const err3 = error
+                  createToast('error')
+                });
+
+
+                var delRef = ref(storage, id + '/uid.txt');
+
+                // Delete the file
+                deleteObject(delRef).then(() => {
+                  // File deleted successfully
+
+                }).catch((error) => {
+                  // Uh-oh, an error occurred!
+                  const err3 = error
+                  createToast('error')
+                });
+
+
+                var delRef = ref(storage, id + '/id.txt');
+
+                // Delete the file
+                deleteObject(delRef).then(() => {
+                  // File deleted successfully
+
+                }).catch((error) => {
+                  // Uh-oh, an error occurred!
+                  const err3 = error
+                  createToast('error')
+                });
+
+                var delRef133 = ref(storage, id + '/img.txt');
+
+                // Delete the file
+                deleteObject(delRef133).then(() => {
+                  // File deleted successfully
+                  console.log(delRef133)
+                  createToast('success')
+                }).catch((error) => {
+                  // Uh-oh, an error occurred!
+                  const err3 = error
+                  createToast('error')
+                });
+              }
+
+                  function openIMG(srcURL) {
+      const popup1 = document.querySelector('#imagePreview')
+      popup1.style.display = 'block'
+      document.getElementById('imgPre').src = srcURL
+    }
+            </script>
+            <!-- 					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/zeplin.svg" /></span>
+								<h3>Zeplin</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Collaboration between designers and developers.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/github.svg" /></span>
+								<h3>GitHub</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Link pull requests and automate workflows.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/figma.svg" /></span>
+								<h3>Figma</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Embed file previews in projects.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/zapier.svg" /></span>
+								<h3>Zapier</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox">
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Build custom automations and integrations with apps.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/notion.svg" /></span>
+								<h3>Notion</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Embed notion pages and notes in projects.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/slack.svg" /></span>
+								<h3>Slack</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Send notifications to channels and create projects.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/zendesk.svg" /></span>
+								<h3>Zendesk</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Link and automate Zendesk tickets.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/jira.svg" /></span>
+								<h3>Atlassian JIRA</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox">
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Plan, track, and release great software.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/dropbox.svg" /></span>
+								<h3>Dropbox</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Everything you need for work, all in one place.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/google-chrome.svg" /></span>
+								<h3>Google Chrome</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Link your Google account to share bookmarks across your entire team.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/discord.svg" /></span>
+								<h3>Discord</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox" checked>
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Keep in touch with your customers without leaving the app.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article>
+					<article class="card">
+						<div class="card-header">
+							<div>
+								<span><img src="https://assets.codepen.io/285131/google-drive.svg" /></span>
+								<h3>Google Drive</h3>
+							</div>
+							<label class="toggle">
+								<input type="checkbox">
+								<span></span>
+							</label>
+						</div>
+						<div class="card-body">
+							<p>Link your Google account to share files across your entire team.</p>
+						</div>
+						<div class="card-footer">
+							<a href="#">View integration</a>
+						</div>
+					</article> -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!--                       <script src="ac-de.js" /> -->
+  <script type="module">
+    import {acceptReport, denyReport, deleteFile} from './script.js'
+  </script>
+  <!-- partial -->
+  <script src='https://unpkg.com/phosphor-icons'></script>
+  <script src="./script.js" type="module"></script>
+  <!-- <div id="out"></div> -->
+  <ul class="notifications"></ul>
+  <!--     <div class="buttons">
+      <button class="btn" id="success">Success</button>
+      <button class="btn" id="error">Error</button>
+      <button class="btn" id="warning">Warning</button>
+      <button class="btn" id="info">Info</button>
+    </div> -->
+  </main>
+  </div>
+</body>
+
+<!-- HTML code for the form popup -->
+<script src="saveID.js" type="module"></script>
+<div id="popup-form" class="popup">
+  <div class="popup-content" style="background-color: #1e1f29;">
+    <h2>Customize Your mySchool ID</h2>
+    <form id="url-form">
+      <label for="username">mySchool ID:</label>
+      <input type="text" id="desc" name="username" placeholder="E.g. Zymono Academy" required>
+      <span class="helper-text">Your Custom mySchool ID will be used for the student signup process. Set it to your school's name. (Please note the no spaces are supported)</span>
+
+      <!-- <label for="desc">Description:</label>
+      <input type="text" id="description" name="desc" value="Premium Required" disabled required>
+      <span class="helper-text">Your Custom Description.</span>
+
+      <label for="desc">Banner:</label>
+      <input type="text" id="banner" name="desc" value="Premium Required" disabled required>
+      <span class="helper-text">Your Custom Banner's URL. (500PX X 300PX)</span>
+
+      <label for="url-prefix">Default Platform:</label>
+      <input type="text" id="url-prefix" name="url-prefix" required>
+      <span class="helper-text">This will be the platform selected by default when a user opens your Report
+        URL.</span> -->
+      <br><br>
+
+      <div class="buttons">
+        <style>
+          .popbtn:hover {
+            background-color: #6161ae;
+          }
+        </style>
+        <button type="submit" class="popupfield" style="background-color: #8484ff; ">Save</button>
+        <button type="button"
+          onclick="const popup = document.querySelector('#popup-form'); popup.style.display = 'none';"
+          class="popupfield">Cancel</button>
+        <script>
+          function closePopup() {
+            const popup = document.querySelector('#popup-form')
+            // Hide the popup container
+            popup.style.display = 'none';
+          }
+          // Get the form element
+          const form = document.querySelector('#url-form');
+
+          // Add a submit event listener to the form
+          form.addEventListener('submit', (event) => {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+
+            // Run the saveURL() function with the input value
+            saveURL();
+
+            // Close the popup
+            const popup = document.querySelector('#popup-form'); popup.style.display = 'none';
+          });
+
+
+          function saveURL() {
+
+            // if (document.querySelector('#banner').value !== 'Premium Required' && document.querySelector('#banner').value !== "" && document.querySelector('#banner').value !== null) {
+            //   var bgURL = document.getElementById("banner").value
+            //   // window.localStorage.setItem("bgURL", bgURL)
+
+            //   var sr = window.localStorage.getItem("uid") + '/banner.txt'
+
+            //   saveCloud(sr, bgURL)
+            // }
+            // var descr = document.getElementById("description").value
+            // if (document.querySelector('#description').value !== 'Premium Required' && document.querySelector('#description').value !== "" && document.querySelector('#description').value !== null) {
+
+
+            //   var sr13 = window.localStorage.getItem("uid") + '/desc.txt'
+
+            //   saveCloud(sr13, descr)
+
+            // }
+
+            if (document.querySelector('#desc').value !== 'Premium Required' && document.querySelector('#desc').value !== "" && document.querySelector('#desc').value !== null) {
+
+              const listRef = ref(storage, 'zymono/')
+
+              listAll(listRef)
+                .then((res) => {
+                  res.prefixes.forEach((folderRef) => {
+                    console.log(folderRef)
+
+                    if (window.btoa(window.btoa(document.querySelector('#desc').value)) == folderRef.name && window.btoa(window.btoa(document.querySelector('#desc').value)) !== window.localStorage.getItem('uid')) {
+                      createToast('alreadyAccount')
+                    } else {
+                      saveDesc()
+                    }
+
+
+
+                  });
+                  res.items.forEach((itemRef) => {
+
+                  });
+                }).catch((error) => {
+                  const err3 = error
+                  createToast('error')
+                  // Uh-oh, an error occurred!
+                });
+            }
+            if (document.querySelector('#url-prefix').value !== null) {
+              saveCloud(`${window.localStorage.getItem('uid')}/dp`, document.querySelector('#url-prefix').value)
+            }
+          }
+
+
+          function saveDesc() {
+            var desc = document.getElementById("desc").value
+            window.localStorage.setItem('uid', window.btoa(window.btoa(desc)))
+            saveCloud(`user/${window.localStorage.getItem('buid')}/team`, window.btoa(window.btoa(desc)))
+          }
+        </script>
+        <link rel="stylesheet" href="style.css">
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="imagePreview" class="popup">
+  <div class="popup-content">
+    <img id="imgPre" src=''><br>
+    <button type="button" onclick="document.querySelector('#imagePreview').style.display = 'none';" class="popupfield">Close</button>
+    <script>
+      function closePopup() {
+        const popup1 = document.querySelector('#imagePreview')
+        // Hide the popup container
+        popup1.style.display = 'none';
+      }
+
+      // Get the editURL element
+      // const editURL1 = document.querySelector('#collab');
+
+      // Get the popup container
+      const popup1 = document.querySelector('#imagePreview');
+
+      // Add a click event listener to the editURL element
+      // editURL1.addEventListener('click', () => {
+      //   // Show the popup container
+      //   popup1.style.display = 'block';
+      // });
+      function openIMG(srcURL) {
+        popup1.style.display = 'block'
+        document.getElementById('imgPre').src = srcURL
+      }
+
+      // Function to close the popup
+      function closeIMG() {
+        // Hide the popup container
+        popup1.style.display = 'none';
+      }
+    </script>
+    <link rel="stylesheet" href="style.css">
+  </div>
+</div>
+<script type="text/javascript"
+  id="zsiqchat">var $zoho = $zoho || {}; $zoho.salesiq = $zoho.salesiq || {widgetcode: "e053bff667460fb859f95c245f87047d3340a171da85957cb979ec2b856e28fa", values: {}, ready: function () {}}; var d = document; s = d.createElement("script"); s.type = "text/javascript"; s.id = "zsiqscript"; s.defer = true; s.src = "https://salesiq.zoho.com/widget"; t = d.getElementsByTagName("script")[0]; t.parentNode.insertBefore(s, t);</script>
+
+</html>

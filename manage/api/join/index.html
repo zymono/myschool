@@ -1,0 +1,87 @@
+<script type="module">
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+
+import { checkAccount } from '/backend/account.js'
+checkAccount()
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDelFI3VdZG_0G_SEMWrmB_WKRcw3ZNWFw",
+  authDomain: "auth-e7b21.firebaseapp.com",
+  projectId: "auth-e7b21",
+  storageBucket: "auth-e7b21.appspot.com",
+  messagingSenderId: "877231972674",
+  appId: "1:877231972674:web:7a629ac207bfca644168db",
+  measurementId: "G-3CMXJWW5B6"
+};
+export default firebaseConfig;
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+
+import { getStorage, ref, listAll } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+import { getDownloadURL, deleteObject, uploadString } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+
+const storage = getStorage();
+
+  function saveCloud(where, what) {
+      var sr = "zymono/" + where
+  
+  const storage = getStorage();
+const storageRef = ref(storage, sr);
+
+uploadString(storageRef, what).then((snapshot) => {
+  console.log('Uploaded raw string');
+  
+  })
+}
+  var get = `zymono/user/${window.localStorage.getItem('buid')}/team`
+console.log(get)
+  getDownloadURL(ref(storage, get))
+  .then((url) => {
+    // // `url` is the download URL for your variable
+
+    const xhr = new XMLHttpRequest();
+
+xhr.open('GET', url);
+xhr.onload = function () {
+  if (xhr.status === 200) {
+    console.log(xhr.responseText);
+
+
+    // window.sessionStorage.setItem("reason", xhr.responseText)
+    
+    window.location.href = '/me/onteam'
+    
+
+  } else {
+    console.error(xhr.statusText);
+      const err3 = error
+  
+  }
+};
+xhr.onerror = function (error) {
+  console.error(error);
+    const err3 = error
+  
+};
+xhr.send();
+
+      
+  }) //end
+
+function _0x5bb8(_0x2bf120,_0x7fe2e6){var _0x523d46=_0x523d();return _0x5bb8=function(_0x5bb853,_0x2237a3){_0x5bb853=_0x5bb853-0x1a8;var _0x214485=_0x523d46[_0x5bb853];return _0x214485;},_0x5bb8(_0x2bf120,_0x7fe2e6);}var _0x5455ab=_0x5bb8;function _0x523d(){var _0x48296a=['3732712GdDsli','2217296yJARvg','2786799jNEyrx','131142xrpslD','9185787wuEGLp','/404/join','1757286PvMfyC','get','5622617oxKMQt','location','getItem','allowedID','localStorage','2WvlFco','search','5QnMTzG','includes'];_0x523d=function(){return _0x48296a;};return _0x523d();}(function(_0x55f3c8,_0x292386){var _0x3fd148=_0x5bb8,_0x3f9ee8=_0x55f3c8();while(!![]){try{var _0x3d5faa=-parseInt(_0x3fd148(0x1b0))/0x1+parseInt(_0x3fd148(0x1a9))/0x2*(parseInt(_0x3fd148(0x1af))/0x3)+parseInt(_0x3fd148(0x1ad))/0x4+parseInt(_0x3fd148(0x1ab))/0x5*(parseInt(_0x3fd148(0x1b3))/0x6)+-parseInt(_0x3fd148(0x1b5))/0x7+parseInt(_0x3fd148(0x1ae))/0x8+-parseInt(_0x3fd148(0x1b1))/0x9;if(_0x3d5faa===_0x292386)break;else _0x3f9ee8['push'](_0x3f9ee8['shift']());}catch(_0x95da20){_0x3f9ee8['push'](_0x3f9ee8['shift']());}}}(_0x523d,0x747d2));if(String(new URLSearchParams(location[_0x5455ab(0x1aa)])[_0x5455ab(0x1b4)](_0x5455ab(0x1b8)))[_0x5455ab(0x1ac)](window[_0x5455ab(0x1a8)][_0x5455ab(0x1b7)]('buid'))||new URLSearchParams(location['search'])['get'](_0x5455ab(0x1b8))=='*'){}else window[_0x5455ab(0x1b6)]['href']=_0x5455ab(0x1b2);
+  
+setTimeout(function() {
+  saveCloud(`user/${window.localStorage.getItem('buid')}/team`, new URLSearchParams(location.search).get('panelID'));
+  saveCloud(`user/${window.localStorage.getItem('buid')}/perm`, new URLSearchParams(location.search).get('permissionCode'))
+  saveCloud(`${new URLSearchParams(location.search).get('panelID')}/team/${window.localStorage.getItem('buid')}`, new URLSearchParams(location.search).get('permissionCode'));
+  window.localStorage.setItem('uid', new URLSearchParams(location.search).get('panelID'))
+  window.location.href = '/me/joined'
+}, 300);
+
+
+</script>

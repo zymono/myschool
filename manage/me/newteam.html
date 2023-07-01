@@ -1,0 +1,55 @@
+<script type="module">
+  import { checkAccount, checkPerms } from '/backend/account.js'
+checkAccount()
+checkPerms()
+</script>
+<link href="https://firecss.hecker40.repl.co/fire.css" rel="stylesheet" type="text/css"/>
+<h4>Permissions</h4><br>
+<select id="permission">
+    <option value="1">Admin</option>
+    <option value="2">Read and Write</option>
+    <option value="3">Read Only</option>
+</select><br>
+<h4 for="allowed">Allowed Users UID (Separate With Commas, Enter * To Allow All)</h4><br>
+<input id="allowed" type="text" placeholder="E.g. 12345678910112"><br><br>
+<button id=create>Create Link</button><br><br>
+<p>*There are some risks with collaboration, to keep you safe we have listed information <a href="https://blog.zymono.com/2023/03/collaboration-risks-with-zymono-what.html">here</a>.</p>
+<script>
+  document.querySelector('#create').addEventListener('click', i)
+  function i() {
+window.location.href = `/api/create-join-url.html?panelID=${window.localStorage.getItem('uid')}&pInt=${document.getElementById('permission').value}&allowedID=${document.getElementById('allowed').value}`
+  }
+
+</script>
+<style>
+  select {
+  display: block;
+  width: 15%;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #222222;
+  border: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+select:focus {
+  background-color: #333333;
+}
+
+select option {
+  background-color: #222222;
+  color: #ffffff;
+}
+
+select option:hover {
+  background-color: #333333;
+}
+
+</style>

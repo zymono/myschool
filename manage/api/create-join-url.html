@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <link>
+  </head>
+  <body>
+    <h1 class="message">Generating join link please allow up to 30 seconds!</h1>
+
+    <p id="message"></p>
+ <script>
+function createURL() {
+  function permCode() {
+var _0x15b878=_0xddb4;function _0xddb4(_0x24911e,_0x2663a9){var _0x96c42e=_0x96c4();return _0xddb4=function(_0xddb464,_0xf5a7ae){_0xddb464=_0xddb464-0xf1;var _0x545710=_0x96c42e[_0xddb464];return _0x545710;},_0xddb4(_0x24911e,_0x2663a9);}function _0x96c4(){var _0x546db1=['search','25TZcXOh','255CDElVu','522824gwiwSz','33211','4336880ORusqN','2279949kZpWvH','48MYxSby','14283GbGulo','1790AIccxa','6WRqgtA','22344','88992','1005521iRZHdj','99350onwiad','pInt','5114Gauoye'];_0x96c4=function(){return _0x546db1;};return _0x96c4();}(function(_0x55ccda,_0x483587){var _0x377531=_0xddb4,_0x4c4019=_0x55ccda();while(!![]){try{var _0x4e6f8c=parseInt(_0x377531(0x101))/0x1+parseInt(_0x377531(0xf2))/0x2*(parseInt(_0x377531(0xf5))/0x3)+parseInt(_0x377531(0xf6))/0x4*(-parseInt(_0x377531(0xf4))/0x5)+-parseInt(_0x377531(0xfd))/0x6*(-parseInt(_0x377531(0xf9))/0x7)+parseInt(_0x377531(0xf8))/0x8+parseInt(_0x377531(0xfb))/0x9*(-parseInt(_0x377531(0xfc))/0xa)+parseInt(_0x377531(0x100))/0xb*(parseInt(_0x377531(0xfa))/0xc);if(_0x4e6f8c===_0x483587)break;else _0x4c4019['push'](_0x4c4019['shift']());}catch(_0x5d34a4){_0x4c4019['push'](_0x4c4019['shift']());}}}(_0x96c4,0x958c9));var pInt=new URLSearchParams(location[_0x15b878(0xf3)])['get'](_0x15b878(0xf1));if(pInt=='1')return _0x15b878(0xfe);else return pInt=='2'?_0x15b878(0xf7):_0x15b878(0xff);
+  }
+  // var link = document.getElementById("linkinput").value;
+  var link = `https://zymono.com/api/join/?panelID=${new URLSearchParams(location.search).get('panelID')}&permissionCode=${permCode()}&allowedID=${new URLSearchParams(location.search).get('allowedID')}`
+  var data = {
+    "domain":"join.zymono.com",
+    "originalURL": link,
+    "allowDuplicates":false }; 
+ fetch('https://api.short.cm/links/public', {
+    method: 'post',
+    headers: {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'authorization': 'pk_pdRztdOnp2UgqLWd'
+    },
+    body: JSON.stringify(data)
+  }) .then(function(response) {
+        return response.json();
+    }) 
+    .then(function(data){ 
+    // document.getElementById("message").innerHTML = "Your short link is " + data.shortURL 
+      window.location.href = '/me/teamcreated.html?url=' + data.shortURL
+    })
+    // document.getElementById("linkinput").value='';
+      
+ };
+
+          createURL()
+    </script>
+  </body>
+</html>

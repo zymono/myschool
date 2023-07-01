@@ -1,0 +1,71 @@
+<link href="https://firecss.hecker40.repl.co/fire.css" rel="stylesheet" type="text/css"/>
+<title>Edit Team Member</title>
+<h3 id="edit"></h3><br><br>
+<script type="module">
+      import { checkAccount, checkPerms } from '/backend/account.js'
+      checkAccount()
+      checkPerms()
+    </script>
+<select id="permission">
+    <option value="1">Admin</option>
+    <option value="2">Read and Write</option>
+    <option value="3">Read Only</option>
+</select><br><br>
+<button id="create">Apply</button><br><br>
+<button id="remove">Remove From Team</button>
+<script type="module">
+  document.getElementById('edit').innerText = `Edit ${new URLSearchParams(location.search).get('uid')}`
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+
+
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDelFI3VdZG_0G_SEMWrmB_WKRcw3ZNWFw",
+  authDomain: "auth-e7b21.firebaseapp.com",
+  projectId: "auth-e7b21",
+  storageBucket: "auth-e7b21.appspot.com",
+  messagingSenderId: "877231972674",
+  appId: "1:877231972674:web:7a629ac207bfca644168db",
+  measurementId: "G-3CMXJWW5B6"
+};
+export default firebaseConfig;
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+
+import { getStorage, ref, listAll } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+import { getDownloadURL, deleteObject, uploadString } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+
+const storage = getStorage();
+
+function saveCloud(where, what) {
+      var sr = "zymono/" + where
+  
+  const storage = getStorage();
+const storageRef = ref(storage, sr);
+
+uploadString(storageRef, what).then((snapshot) => {
+  console.log('Uploaded raw string');
+  
+  })
+}
+  function permCode() {
+    var pInt = document.getElementById('permission').value
+    function _0x2e4a(){var _0x3203cf=['16291wjxEay','15FSnCbH','1043heqpiH','59176YBhVMz','88992','2301264OQoejD','3HQubXd','1433048DGiErQ','33211','2602494wFadag','7184812memZoU','461340HqPzNa','8330SkQhaB'];_0x2e4a=function(){return _0x3203cf;};return _0x2e4a();}function _0x14a4(_0x2b2c30,_0x9aaacd){var _0x2e4a9a=_0x2e4a();return _0x14a4=function(_0x14a468,_0x363a19){_0x14a468=_0x14a468-0xc5;var _0x17ff01=_0x2e4a9a[_0x14a468];return _0x17ff01;},_0x14a4(_0x2b2c30,_0x9aaacd);}var _0x40ae62=_0x14a4;(function(_0xc13e71,_0x29d6af){var _0x1e5ebc=_0x14a4,_0x376641=_0xc13e71();while(!![]){try{var _0x1e8dbe=-parseInt(_0x1e5ebc(0xc7))/0x1+-parseInt(_0x1e5ebc(0xcb))/0x2*(parseInt(_0x1e5ebc(0xc6))/0x3)+parseInt(_0x1e5ebc(0xca))/0x4+parseInt(_0x1e5ebc(0xce))/0x5*(-parseInt(_0x1e5ebc(0xc9))/0x6)+-parseInt(_0x1e5ebc(0xcf))/0x7*(-parseInt(_0x1e5ebc(0xd0))/0x8)+-parseInt(_0x1e5ebc(0xc5))/0x9+parseInt(_0x1e5ebc(0xcc))/0xa*(parseInt(_0x1e5ebc(0xcd))/0xb);if(_0x1e8dbe===_0x29d6af)break;else _0x376641['push'](_0x376641['shift']());}catch(_0x41d024){_0x376641['push'](_0x376641['shift']());}}}(_0x2e4a,0xde808));if(pInt=='1')return'22344';else return pInt=='2'?_0x40ae62(0xc8):_0x40ae62(0xd1);
+  }
+  document.querySelector('#create').addEventListener('click', i)
+  function i() {
+    saveCloud(`user/${new URLSearchParams(location.search).get('uid')}/perm`, permCode())
+    alert('Permissions Updated.')
+  }
+  
+  document.querySelector('#remove').addEventListener('click', o)
+  function o() {
+    saveCloud(`user/${new URLSearchParams(location.search).get('uid')}/team`, new URLSearchParams(location.search).get('uid'))
+    alert("Removed User's Access to Your Team.")
+  }
+</script>
