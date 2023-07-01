@@ -41,7 +41,6 @@ firebase.initializeApp(firebaseConfig);
 
   storageRef.putString(what).then((snapshot) => {
     console.log(where);
-    window.localStorage.setItem('school', window.btoa(window.btoa(snapshot)))
     window.location = '/report/'
   })
 }
@@ -52,6 +51,7 @@ var signupForm = document.getElementById('signup-form');
 
   var schoolID = window.btoa(window.btoa(document.getElementById('school').value))
 
+    window.localStorage.setItem('school', window.btoa(window.btoa(schoolID)))
     saveCloud(`zymono/${new URLSearchParams(location.search).get('user')}/school`, schoolID)
 });
 
