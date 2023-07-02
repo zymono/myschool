@@ -25,6 +25,41 @@
   <link rel="icon" type="image/x-icon" href="/images/fav.png">
   <title>Report | Zymono</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="manifest" href="/manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function (registration) {
+          console.log('Service Worker registered with scope:', registration.scope);
+          if (window.localStorage.getItem('buid')) {
+            window.location = '/report/'
+          } else {
+            window.location = '/flows/signup/'
+          }
+        })
+        .catch(function (error) {
+          console.log('Service Worker registration failed:', error);
+        });
+    }
+
+    if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(function(registration) {
+      registration.addEventListener('updatefound', function() {
+        const newWorker = registration.installing;
+        newWorker.addEventListener('statechange', function() {
+          if (newWorker.state === 'installed') {
+            // Prompt the user to update the page
+          }
+        });
+      });
+    })
+    .catch(function(error) {
+      console.log('Service Worker registration failed:', error);
+    });
+}
+
+  </script>
   <!--     <nav id='menu'>
   <input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label>
   <ul>
