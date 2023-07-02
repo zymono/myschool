@@ -1,0 +1,17 @@
+{
+  "name": "Zymono mySchool",
+  "short_name": "mySchool",
+  "description": "Zymono mySchool makes reporting bullies, cheaters, or rule-breakers at your school as simple as a few clicks.",
+  "Scope": "/",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "icons": [{
+    "src": "//zymono.com/images/myschool.png",
+    "sizes": "500x500",
+    "type": "image/png"
+  }],
+   "splash_pages": null
+}
