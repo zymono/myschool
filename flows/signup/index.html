@@ -71,6 +71,13 @@ signupForm.addEventListener('submit', function(event) {
     .then(function(userCredential) {
       // Signup successful
       var user = userCredential.user;
+
+      firebase.auth().currentUser.sendEmailVerification()
+  .then(() => {
+    // Email verification sent!
+    // ...
+  });
+
       
     const email = user.email;
     const emailVerified = user.emailVerified;
