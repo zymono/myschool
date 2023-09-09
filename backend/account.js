@@ -318,7 +318,7 @@ xhr.onload = function () {
 
     if (xhr.responseText !== 't' && window.localStorage.getItem('personal') == 'true') {
       window.localStorage.removeItem('personal')
-      document.reload()
+      location.reload()
     } else if (xhr.responseText == 't') {
       window.localStorage.setItem('personal', 'true')      
     } else {
@@ -333,27 +333,27 @@ xhr.onload = function () {
 
   window.localStorage.removeItem('personal')
     
-      document.reload()
+      location.reload()
   }
 };
 xhr.onerror = function () {
 
   window.localStorage.removeItem('personal')
   alert(error)
-      document.reload()
+      location.reload()
 };
 xhr.send();
 
       
   }).catch((error) => {
   window.localStorage.removeItem('personal')
-    document.reload()
+    location.reload()
 }); //end
     
 } catch (error) {
 
       window.localStorage.removeItem('personal')
-      document.reload()
+      location.reload()
       alert(error)
 }
 
