@@ -3,9 +3,8 @@
 
 <head>
   <script type="module">
-    if (window.localStorage.getItem('buid')) {} else {
-      window.location = '/flows/login/'
-    }
+    import { checkPlans } from '/backend/account.js'
+    checkPlans()
   </script>
   <!-- <script type="module" src="/backend/account.js">checkPlans()</script> -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
@@ -25,36 +24,6 @@
   <link rel="icon" type="image/x-icon" href="/images/fav.png">
   <title>Report | Zymono</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
-  <link rel="manifest" href="/manifest.json">
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(function (registration) {
-          console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch(function (error) {
-          console.log('Service Worker registration failed:', error);
-        });
-    }
-
-    if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(function(registration) {
-      registration.addEventListener('updatefound', function() {
-        const newWorker = registration.installing;
-        newWorker.addEventListener('statechange', function() {
-          if (newWorker.state === 'installed') {
-            // Prompt the user to update the page
-          }
-        });
-      });
-    })
-    .catch(function(error) {
-      console.log('Service Worker registration failed:', error);
-    });
-}
-
-  </script>
   <!--     <nav id='menu'>
   <input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label>
   <ul>
@@ -70,7 +39,7 @@
   <div class="container">
     <div class="main-content">
       <br>
-  <img id="banner" src="//zymono.com/images/zymono.png" width="500" height="300">
+  <img id="banner" src="/images/zymono.png" width="300">
   <h1 id="desc">Report</h4>
   <h3 id="domain"></h3>
     <h4>If There Is An Immediate Threat To Your Life, Call <u>911</u></h4>
@@ -79,16 +48,26 @@
       </a><br> -->
     <form id="reportForm">
       <input type="file" id="image-input" accept=".jpg, .jpeg, .png .svg" max-size="32MB"><br>
-      <input placeholder="Violators Name or Safety Issue" id="name" type="text" maxlength="30" required><br>
+      <input placeholder="Violation" id="name" type="text" maxlength="30" required><br>
       <input placeholder="Reason of Report" id="reason" type="text" maxlength="20" required><br>
-
+<!--       <input placeholder="What Platform Were You Using (Minecraft14, google.com, etc.)" id="platform" type="text"
+        maxlength="50" required><br> -->
+      <!-- <input placeholder="App/Website Zymono ID" id="game" type="text" required><br> -->
+<!--       <div class="custom-dropdown">
+        <input placeholder="App/Website Zymono ID" type="text" id="game" name="reportTo" class="report-to-dropdown" required list="names" required>
+        <datalist id="names"> -->
+          <!-- <option value="John Doe"></option>
+          <option value="Jane Smith"></option>
+          <option value="Michael Johnson"></option> -->
+        </datalist>
+      </div>
       <!--     <input type="file" id="myFile" name="filename"><br><br> -->
-      <a href="/reported/">
+      <!-- <a href="/reported/"> -->
 
-        <button type="submit" id="submit">Report</button>
-      </a>
-
-       <p>By clicking Report Player, you agree to the <a href="//zymono.com/policy/terms.html">Zymono Terms of Service</a>, <a href="//zymono.com/policy/privacy.html">Zymono Privacy Policy</a>,  <a href="/privacy.html">mySchool Privacy Policy</a>, <a href="https://policies.google.com/privacy">Google Privacy Policy</a>, and your school's Terms of Service and Privacy Policy.</p>
+        <button type="submit" id="submit">Report Player</button>
+      <!-- </a>
+ -->
+      <p>By clicking Report Player, you agree to the <a href="/policy/terms.html">Zymono Terms of Service</a>, <a href="/policy/privacy.html">Zymono Privacy Policy</a>, <a href="https://policies.google.com/privacy">Google Privacy Policy</a>, and this platform's Terms of Service and Privacy Policy.</p>
       <!--     onclick="window.open('/reported/')" onclick="window.close"
      -->
     </form>
@@ -115,7 +94,7 @@
 const isDark = bgColor === 'rgb(0, 0, 0)' || bgColor === 'rgba(0, 0, 0, 0)';
 if (isDark) {
   // Code to execute when the background color is dark
-  document.getElementById('banner').src = '//zymono.com/images/zymono-light.png'
+  document.getElementById('banner').src = '/images/zymono-light.png'
 } else {
   // Code to execute when the background color is light
 }
@@ -145,6 +124,37 @@ if (isDark) {
   <!-- <br><br>
   <p>This Branded Page Is Neither Created Nor Endorsed By Zymono.
 This Branded Page Is Subject To Zymono Terms Of Use. If You Believe That This Branded Page Violates Or Terms Of Use Please Report It <a href="//report.zymono.com/zymono">Here</a>.</p> -->
+
+  <!-- POPUP ERROR -->
+  <div id="popup-form" class="popup">
+  <div class="popup-content" style="background-color: #1e1f29;">
+    <h2>Error!</h2>
+    <form id="url-form">
+      <span class="helper-text" id="error">This will be the platform selected by default when a user opens your Report
+        URL.</span><br><br>
+      <div class="buttons">
+        <style>
+          .popbtn:hover {
+            background-color: #6161ae;
+          }
+        </style>
+        <!-- <button type="submit" class="popupfield" style="background-color: #8484ff; ">Save</button> -->
+        <button type="button"
+          onclick="const popup = document.querySelector('#popup-form'); popup.style.display = 'none';"
+          class="popupfield">Close</button>
+        <script>
+          function closePopup() {
+            const popup = document.querySelector('#popup-form')
+            // Hide the popup container
+            popup.style.display = 'none';
+          }
+          window.closePopup = closePopup
+        </script>
+        <link rel="stylesheet" href="style.css">
+      </div>
+    </form>
+  </div>
+</div>
 </footer>
     </div>
     <button onclick="policy()" class="pol">Toggle Policy</button>
