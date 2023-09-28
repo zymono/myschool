@@ -37,7 +37,7 @@ if (window.localStorage.getItem('u12933')) { } else {
   setDailyUsages(0)
 }
 
-if (getDailyUsages() >= 6 && checkLocalStorage() == false || getDailyUsages() >= 11 && checkLocalStorage() == false && window.localStorage.getItem('personal') == true) {
+if (getDailyUsages() >= 6 && checkLocalStorage() == false || getDailyUsages() >= 11 && checkLocalStorage() == false && window.localStorage.getItem('plan') == 'PERSONAL') {
   document.querySelector('html').remove()
   console.log('DAILY USAGE QUOTA EXCEEDED')
   window.location.href = '/404/exceeded'
@@ -53,7 +53,7 @@ window.onload = function() {
   }
 }
 
-// import { save, loadFromCloud } from '/backend/storage.js'
+import { save, loadFromCloud } from '/backend/storage.js'
 
 var reportForm = document.getElementById("reportForm")
 
@@ -72,74 +72,38 @@ function randomString(length) {
 }
 
 
-reportForm.addEventListener('submit', (event) => {
+reportForm.addEventListener('submit', async (event) => {
   event.preventDefault();
+  let user1 = false
+  console.log('test')
+  var check = window.btoa(window.btoa(document.getElementById("game").value))
+  // Replace with actual user ID
+  const response = await fetch('/api/getInfo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ uid: check }),
+  });
 
-  document.getElementById('submit').disabled = true
-    document.getElementById('submit').innerText = 'Loading'
-
-  if (image) {
-    const imageUrl = image;
-    const html = `<img src="${imageUrl}" alt="uploaded image"/>`;
-    const file = randomString(16)
-
-
-
-    var gameName = window.localStorage.getItem('school')
-
-    var playerName = document.getElementById("name").value
-    var reason = document.getElementById("reason").value
-
-
-    fetch('//zymono.com/api/report', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': '6bYoHbN' //Do not edit this
-      },
-      body: JSON.stringify({
-        id: gameName, //Panel Key from https://zymono.com/me/ (Same as API key)
-        user: playerName, //User being reported
-        imgURL: image, //Url of an image for evidence (You can leave this blank)
-        reason: reason, //Reason for report
-        device: 'Your School', //Platform (E.g. Minecraft, Xbox, Discord, etc)
-        uid: window.localStorage.getItem('buid')
-      })
-    })
-
-    setDailyUsages(getDailyUsages() + 1)
-
-    window.location.href = `/reported/`
-  } else {
-    document.getElementById('submit').disabled = true
-    document.getElementById('submit').innerText = 'Loading'
-
-    const apiKey = 'db2e08783da783967be5eb3f488a1e6a';
-    const apiUrl = 'https://api.imgbb.com/1/upload';
-
-    const formData = new FormData();
-    const inputFile = document.getElementById('image-input').files[0];
-    formData.append('image', inputFile);
-    formData.append('key', apiKey);
-
-    fetch(apiUrl, {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          const imageUrl = data.data.url;
+  if (response.ok) {
+    const reports = await response.json();
+    console.log(reports)
+    reports.forEach(report => {
+      if (report.id == check) {
+        user1 = true
+        if (image) {
+          const imageUrl = image;
           const html = `<img src="${imageUrl}" alt="uploaded image"/>`;
           const file = randomString(16)
 
 
 
-          var gameName = window.localStorage.getItem('school')
+          var gameName = window.btoa(window.btoa(document.getElementById("game").value))
 
           var playerName = document.getElementById("name").value
-
           var reason = document.getElementById("reason").value
+
 
           fetch('//zymono.com/api/report', {
             method: 'POST',
@@ -150,55 +114,119 @@ reportForm.addEventListener('submit', (event) => {
             body: JSON.stringify({
               id: gameName, //Panel Key from https://zymono.com/me/ (Same as API key)
               user: playerName, //User being reported
-              imgURL: data.data.url, //Url of an image for evidence (You can leave this blank)
+              imgURL: image, //Url of an image for evidence (You can leave this blank)
               reason: reason, //Reason for report
-              device: 'Your School', //Platform (E.g. Minecraft, Xbox, Discord, etc)
+              device: document.getElementById("platform").value, //Platform (E.g. Minecraft, Xbox, Discord, etc)
               uid: window.localStorage.getItem('buid')
             })
           })
 
-          // saveCloud(gameName + '/' + file + '/img.txt', data.data.url)
-
-          // saveCloud(gameName + '/' + file + '/name.txt', playerName)
-
-          // saveCloud('/list/' + playerName, playerName)
-
-          // var reason = document.getElementById("reason").value
-          // saveCloud(gameName + '/' + file + '/reason.txt', reason)
-
-          // saveCloud(gameName + '/' + file + '/platform.txt', document.getElementById("platform").value)
-
-          // saveCloud(gameName + '/' + file + '/uid.txt', window.localStorage.getItem('buid'))
-
-          // saveCloud(gameName + '/' + file + '/id.txt', file)
-
-          // //USER REPORTS DASHBOARD SENDER
-
-          // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/name.txt', playerName)
-
-          // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/reason.txt', reason)
-
-          // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/platform.txt', document.getElementById("platform").value)
-
-          // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/status.txt', "⚫ Sent To The Platform's Panel")
-
-          // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/uid.txt', window.localStorage.getItem('buid'))
-
           setDailyUsages(getDailyUsages() + 1)
 
-          // const i = sendNotif(gameName, file)
-
-          window.location.href = `/reported/`
+          window.location.href = `/reported/?platform=${document.getElementById("game").value}&who=${document.getElementById("game").value}&fn=${file}&u=${document.getElementById("name").value}&r=${document.getElementById("reason").value}&p=${document.getElementById("platform").value}&img=${image}`
         } else {
-          alert('Error: ' + data.status_message);
+
+          document.getElementById('submit').disabled = true
+          document.getElementById('submit').innerText = 'Loading'
+
+          const apiKey = 'db2e08783da783967be5eb3f488a1e6a';
+          const apiUrl = 'https://api.imgbb.com/1/upload';
+
+          const formData = new FormData();
+          const inputFile = document.getElementById('image-input').files[0];
+          formData.append('image', inputFile);
+          formData.append('key', apiKey);
+
+          fetch(apiUrl, {
+            method: 'POST',
+            body: formData
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                const imageUrl = data.data.url;
+                const html = `<img src="${imageUrl}" alt="uploaded image"/>`;
+                const file = randomString(16)
+
+
+
+                var gameName = window.btoa(window.btoa(document.getElementById("game").value))
+
+                var playerName = document.getElementById("name").value
+
+                var reason = document.getElementById("reason").value
+
+                fetch('//zymono.com/api/report', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': '6bYoHbN' //Do not edit this
+                  },
+                  body: JSON.stringify({
+                    id: gameName, //Panel Key from https://zymono.com/me/ (Same as API key)
+                    user: playerName, //User being reported
+                    imgURL: data.data.url, //Url of an image for evidence (You can leave this blank)
+                    reason: reason, //Reason for report
+                    device: document.getElementById("platform").value, //Platform (E.g. Minecraft, Xbox, Discord, etc)
+                    uid: window.localStorage.getItem('buid')
+                  })
+                })
+
+                // saveCloud(gameName + '/' + file + '/img.txt', data.data.url)
+
+                // saveCloud(gameName + '/' + file + '/name.txt', playerName)
+
+                // saveCloud('/list/' + playerName, playerName)
+
+                // var reason = document.getElementById("reason").value
+                // saveCloud(gameName + '/' + file + '/reason.txt', reason)
+
+                // saveCloud(gameName + '/' + file + '/platform.txt', document.getElementById("platform").value)
+
+                // saveCloud(gameName + '/' + file + '/uid.txt', window.localStorage.getItem('buid'))
+
+                // saveCloud(gameName + '/' + file + '/id.txt', file)
+
+                // //USER REPORTS DASHBOARD SENDER
+
+                // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/name.txt', playerName)
+
+                // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/reason.txt', reason)
+
+                // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/platform.txt', document.getElementById("platform").value)
+
+                // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/status.txt', "⚫ Sent To The Platform's Panel")
+
+                // saveCloud('ur/' + window.localStorage.getItem('buid') + '/' + file + '/uid.txt', window.localStorage.getItem('buid'))
+
+                setDailyUsages(getDailyUsages() + 1)
+
+                // const i = sendNotif(gameName, file)
+
+                window.location.href = `/reported/?platform=${document.getElementById("game").value}&who=${document.getElementById("game").value}&fn=${file}&u=${document.getElementById("name").value}&r=${document.getElementById("reason").value}&p=${document.getElementById("platform").value}&img=${data.data.url}`
+              } else {
+                alert('Error: ' + data.status_message);
+              }
+            })
+            .catch(error => {
+              console.error(error);
+              document.getElementById('result').innerHTML = 'Error: ' + error.message;
+            });
         }
-      })
-      .catch(error => {
-        console.error(error);
-        document.getElementById('result').innerHTML = 'Error: ' + error.message;
-      });
+      }
+    })
+  } else {
+    console.error('Error fetching reports:', response.status);
   }
 
+  document.getElementById('submit').disabled = true
+  document.getElementById('submit').innerText = 'Loading'
+
+  setTimeout(function() {
+    if (user1 == false) {
+      error('The Zymono ID entered was invalid!')
+    }
+  }, 100)
 
 
   //   const fileLocation = gameName + '/' +  randomString(16) + '.js'
@@ -294,246 +322,266 @@ const removeChar = (str, char) => str.split(char).join('');
 
 var uid = removeChar(String(new URLSearchParams(location.search).get('g')), '/')
 
-// if (new URLSearchParams(location.search).get('g') == null || uid == '/') { } else { document.getElementById("game").value = uid }
+if (new URLSearchParams(location.search).get('g') == null || uid == '/') { } else { document.getElementById("game").value = uid }
 
 // REPEATEDLY CHECK FOR BANNERS, DESCRIPTIONS, AND DOMAINS FOR THE GAME/APP.
 //
 //
 //
-// const input = document.getElementById("game");
+const input = document.getElementById("game");
 
-// input.addEventListener("change", function() {
-//   //Banner
-//   var get = 'zymono/' + window.btoa(window.btoa(document.getElementById('game').value)) + '/banner.txt'
+input.addEventListener("change", async function() {
+  //Banner
+  const response = await fetch('/api/info', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ uid: window.btoa(window.btoa(document.getElementById("game").value)) }),
+  });
 
-//   getDownloadURL(ref(storage, get))
-//     .then((url) => {
-//       // // `url` is the download URL for your variable
+  if (response.ok) {
+    const report = await response.json();
+    console.log(report)
 
-//       const xhr = new XMLHttpRequest();
+    document.getElementById("banner").src = report.data.banner || '//zymono.com/images/zymono.png'
+    document.getElementById("policyURL").src = report.data.policy || '//legal.zymono.com/terms-of-service'
+    document.getElementById("desc").innerText = report.data.description || 'Zymono'
+    document.getElementById('domain').innerText = report.data.domain || '';
+    document.getElementById('platform').value = report.data.platform || ''
+    
+  }
 
-//       xhr.open('GET', url);
-//       xhr.onload = function() {
-//         if (xhr.status === 200) {
+  // var get = 'zymono/' + window.btoa(window.btoa(document.getElementById('game').value)) + '/banner.txt'
 
+  // getDownloadURL(ref(storage, get))
+  //   .then((url) => {
+  //     // // `url` is the download URL for your variable
 
-//           // window.sessionStorage.setItem("reason", xhr.responseText)
-//           document.getElementById("banner").src = xhr.responseText
+  //     const xhr = new XMLHttpRequest();
 
-//         } else {
-
-//         }
-//       };
-//       xhr.onerror = function(error) {
-
-//       };
-//       xhr.send();
-//     })
-
-//   //Policy
-//   var get = 'zymono/' + window.btoa(window.btoa(document.getElementById('game').value)) + '/policy.txt'
-
-//   getDownloadURL(ref(storage, get))
-//     .then((url) => {
-//       // // `url` is the download URL for your variable
-
-//       const xhr = new XMLHttpRequest();
-
-//       xhr.open('GET', url);
-//       xhr.onload = function() {
-//         if (xhr.status === 200) {
+  //     xhr.open('GET', url);
+  //     xhr.onload = function() {
+  //       if (xhr.status === 200) {
 
 
-//           // window.sessionStorage.setItem("reason", xhr.responseText)
-//           document.getElementById("policyURL").src = xhr.responseText
+  //         // window.sessionStorage.setItem("reason", xhr.responseText)
+  //         document.getElementById("banner").src = xhr.responseText
 
-//         } else {
+  //       } else {
 
-//         }
-//       };
-//       xhr.onerror = function(error) {
+  //       }
+  //     };
+  //     xhr.onerror = function(error) {
 
-//       };
-//       xhr.send();
-//     })
+  //     };
+  //     xhr.send();
+  //   })
 
-//   //NAME/DESCRIPTION
-//   var descGet = 'zymono/' + window.btoa(window.btoa(document.getElementById('game').value)) + '/desc.txt'
+  // //Policy
+  // var get = 'zymono/' + window.btoa(window.btoa(document.getElementById('game').value)) + '/policy.txt'
 
+  // getDownloadURL(ref(storage, get))
+  //   .then((url) => {
+  //     // // `url` is the download URL for your variable
 
-//   getDownloadURL(ref(storage, descGet))
-//     .then((url) => {
-//       // // `url` is the download URL for your variable
+  //     const xhr = new XMLHttpRequest();
 
-//       const xhr = new XMLHttpRequest();
-
-//       xhr.open('GET', url);
-//       xhr.onload = function() {
-//         if (xhr.status === 200) {
-
-
-//           // window.sessionStorage.setItem("reason", xhr.responseText)
-//           document.getElementById("desc").innerText = xhr.responseText
-
-//         } else {
-
-//         }
-//       };
-//       xhr.onerror = function(error) {
-
-//       };
-//       xhr.send();
-//     })
-
-//   //   //DEFAULT PLATFORM (NOT NEEDED YET)
-//   // var platGet = 'zymono/' + window.btoa(window.btoa(uid)) + '/dp'
+  //     xhr.open('GET', url);
+  //     xhr.onload = function() {
+  //       if (xhr.status === 200) {
 
 
-//   // getDownloadURL(ref(storage, platGet))
-//   //   .then((url) => {
-//   //     // // `url` is the download URL for your variable
+  //         // window.sessionStorage.setItem("reason", xhr.responseText)
+  //         document.getElementById("policyURL").src = xhr.responseText
 
-//   //     const xhr = new XMLHttpRequest();
+  //       } else {
 
-//   // xhr.open('GET', url);
-//   // xhr.onload = function () {
-//   //   if (xhr.status === 200) {
-//   //     
+  //       }
+  //     };
+  //     xhr.onerror = function(error) {
 
-//   //     // window.sessionStorage.setItem("reason", xhr.responseText)
-//   //     document.getElementById("platform").value = xhr.responseText
+  //     };
+  //     xhr.send();
+  //   })
 
-//   //   } else {
-//   //  
-//   //   }
-//   // };
-//   // xhr.onerror = function (error) {
-//   // 
-//   // };
-//   // xhr.send();
-//   //   })
-
-//   //DOMAIN (IF ANY)
-//   var get = `/zymono/linked/${window.btoa(window.btoa(document.getElementById('game').value))}/domain`
-//   console.log(get)
-//   getDownloadURL(ref(storage, get))
-//     .then((url) => {
-//       // // `url` is the download URL for your variable
-
-//       const xhr = new XMLHttpRequest();
-
-//       xhr.open('GET', url);
-//       xhr.onload = function() {
-//         if (xhr.status === 200) {
+  // //NAME/DESCRIPTION
+  // var descGet = 'zymono/' + window.btoa(window.btoa(document.getElementById('game').value)) + '/desc.txt'
 
 
+  // getDownloadURL(ref(storage, descGet))
+  //   .then((url) => {
+  //     // // `url` is the download URL for your variable
 
-//           // window.sessionStorage.setItem("reason", xhr.responseText)
-//           document.getElementById('domain').innerText = xhr.responseText;
+  //     const xhr = new XMLHttpRequest();
 
-//         } else {
+  //     xhr.open('GET', url);
+  //     xhr.onload = function() {
+  //       if (xhr.status === 200) {
 
-//           const err3 = error
 
-//         }
-//       };
-//       xhr.onerror = function(error) {
-//         const err3 = error
+  //         // window.sessionStorage.setItem("reason", xhr.responseText)
+  //         document.getElementById("desc").innerText = xhr.responseText
 
-//       };
-//       xhr.send();
-//     }) //end
+  //       } else {
 
-//   //
-//   //
-//   //
-//   //END OF REPEATED CHECK!
-// }, 2000);
+  //       }
+  //     };
+  //     xhr.onerror = function(error) {
+
+  //     };
+  //     xhr.send();
+  //   })
+
+  // //   //DEFAULT PLATFORM (NOT NEEDED YET)
+  // // var platGet = 'zymono/' + window.btoa(window.btoa(uid)) + '/dp'
+
+
+  // // getDownloadURL(ref(storage, platGet))
+  // //   .then((url) => {
+  // //     // // `url` is the download URL for your variable
+
+  // //     const xhr = new XMLHttpRequest();
+
+  // // xhr.open('GET', url);
+  // // xhr.onload = function () {
+  // //   if (xhr.status === 200) {
+  // //     
+
+  // //     // window.sessionStorage.setItem("reason", xhr.responseText)
+  // //     document.getElementById("platform").value = xhr.responseText
+
+  // //   } else {
+  // //  
+  // //   }
+  // // };
+  // // xhr.onerror = function (error) {
+  // // 
+  // // };
+  // // xhr.send();
+  // //   })
+
+  // //DOMAIN (IF ANY)
+  // var get = `/zymono/linked/${window.btoa(window.btoa(document.getElementById('game').value))}/domain`
+  // console.log(get)
+  // getDownloadURL(ref(storage, get))
+  //   .then((url) => {
+  //     // // `url` is the download URL for your variable
+
+  //     const xhr = new XMLHttpRequest();
+
+  //     xhr.open('GET', url);
+  //     xhr.onload = function() {
+  //       if (xhr.status === 200) {
+
+
+
+  //         // window.sessionStorage.setItem("reason", xhr.responseText)
+  //         document.getElementById('domain').innerText = xhr.responseText;
+
+  //       } else {
+
+  //         const err3 = error
+
+  //       }
+  //     };
+  //     xhr.onerror = function(error) {
+  //       const err3 = error
+
+  //     };
+  //     xhr.send();
+  //   }) //end
+
+  //
+  //
+  //
+  //END OF REPEATED CHECK!
+}, 2000);
 
 //ON FIRST LOAD GET DOMAIN IMAGE AND BANNER OF "g" URL PARAMATER
 //
 //
 //
 
-var get = 'zymono/' + window.btoa(window.btoa(uid)) + '/banner.txt'
+// var get = 'zymono/' + window.btoa(window.btoa(uid)) + '/banner.txt'
 
-getDownloadURL(ref(storage, get))
-  .then((url) => {
-    // // `url` is the download URL for your variable
+// getDownloadURL(ref(storage, get))
+//   .then((url) => {
+//     // // `url` is the download URL for your variable
 
-    const xhr = new XMLHttpRequest();
+//     const xhr = new XMLHttpRequest();
 
-    xhr.open('GET', url);
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        console.log(xhr.responseText);
+//     xhr.open('GET', url);
+//     xhr.onload = function() {
+//       if (xhr.status === 200) {
+//         console.log(xhr.responseText);
 
-        // window.sessionStorage.setItem("reason", xhr.responseText)
-        document.getElementById("banner").src = xhr.responseText
+//         // window.sessionStorage.setItem("reason", xhr.responseText)
+//         document.getElementById("banner").src = xhr.responseText
 
-      } else {
-        console.error(xhr.statusText);
-      }
-    };
-    xhr.onerror = function(error) {
-      console.error(error);
-    };
-    xhr.send();
-  })
+//       } else {
+//         console.error(xhr.statusText);
+//       }
+//     };
+//     xhr.onerror = function(error) {
+//       console.error(error);
+//     };
+//     xhr.send();
+//   })
 
-var descGet = 'zymono/' + window.btoa(window.btoa(uid)) + '/desc.txt'
-
-
-getDownloadURL(ref(storage, descGet))
-  .then((url) => {
-    // // `url` is the download URL for your variable
-
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('GET', url);
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        console.log(xhr.responseText);
-
-        // window.sessionStorage.setItem("reason", xhr.responseText)
-        document.getElementById("desc").innerText = xhr.responseText
-
-      } else {
-        console.error(xhr.statusText);
-      }
-    };
-    xhr.onerror = function(error) {
-      console.error(error);
-    };
-    xhr.send();
-  })
-
-var platGet = 'zymono/' + window.btoa(window.btoa(uid)) + '/dp'
+// var descGet = 'zymono/' + window.btoa(window.btoa(uid)) + '/desc.txt'
 
 
-getDownloadURL(ref(storage, platGet))
-  .then((url) => {
-    // // `url` is the download URL for your variable
+// getDownloadURL(ref(storage, descGet))
+//   .then((url) => {
+//     // // `url` is the download URL for your variable
 
-    const xhr = new XMLHttpRequest();
+//     const xhr = new XMLHttpRequest();
 
-    xhr.open('GET', url);
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        console.log(xhr.responseText);
+//     xhr.open('GET', url);
+//     xhr.onload = function() {
+//       if (xhr.status === 200) {
+//         console.log(xhr.responseText);
 
-        // window.sessionStorage.setItem("reason", xhr.responseText)
-        document.getElementById("platform").value = xhr.responseText
+//         // window.sessionStorage.setItem("reason", xhr.responseText)
+//         document.getElementById("desc").innerText = xhr.responseText
 
-      } else {
-        console.error(xhr.statusText);
-      }
-    };
-    xhr.onerror = function(error) {
-      console.error(error);
-    };
-    xhr.send();
-  })
+//       } else {
+//         console.error(xhr.statusText);
+//       }
+//     };
+//     xhr.onerror = function(error) {
+//       console.error(error);
+//     };
+//     xhr.send();
+//   })
+
+// var platGet = 'zymono/' + window.btoa(window.btoa(uid)) + '/dp'
+
+
+// getDownloadURL(ref(storage, platGet))
+//   .then((url) => {
+//     // // `url` is the download URL for your variable
+
+//     const xhr = new XMLHttpRequest();
+
+//     xhr.open('GET', url);
+//     xhr.onload = function() {
+//       if (xhr.status === 200) {
+//         console.log(xhr.responseText);
+
+//         // window.sessionStorage.setItem("reason", xhr.responseText)
+//         document.getElementById("platform").value = xhr.responseText
+
+//       } else {
+//         console.error(xhr.statusText);
+//       }
+//     };
+//     xhr.onerror = function(error) {
+//       console.error(error);
+//     };
+//     xhr.send();
+//   })
 
 // var get = `/zymono/linked/${window.btoa(window.btoa(document.getElementById('game').value))}/domain`
 // console.log(get)
@@ -674,4 +722,58 @@ getDownloadURL(ref(storage, platGet))
 
 //   sendEmail()
 // }
+async function op() {
+  const response = await fetch('/api/info', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ uid: window.btoa(window.btoa(uid)) }),
+  });
+  
+  if (response.ok) {
+    const report = await response.json();
+    console.log(report)
+  
+    document.getElementById("banner").src = report.data.banner || '//zymono.com/images/zymono.png'
+    document.getElementById("policyURL").src = report.data.policy || '//legal.zymono.com/terms-of-service'
+    document.getElementById("desc").innerText = report.data.description || 'Zymono'
+    document.getElementById('domain').innerText = report.data.domain || '';
+    document.getElementById('platform').value = report.data.platform || ''
+  }
+}
+op()
 
+function error(err) {
+  const popup = document.querySelector('#popup-form')
+
+  document.getElementById('error').innerHTML = err
+  // Hide the popup container
+  popup.style.display = 'block';
+}
+
+async function o1p() {
+  console.log('ui')
+  const response = await fetch('/api/getInfo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ uid: 'N/A' }),
+  });
+
+  if (response.ok) {
+    console.log('tester1')
+    const reports = await response.json();
+    // console.log(reports)
+    reports.forEach(report => {
+      const list = document.getElementById('names')
+
+      const item = `<option value="${window.atob(window.atob(report.id))}"></option>`
+
+      list.innerHTML += item
+    })
+  }
+}
+
+o1p()

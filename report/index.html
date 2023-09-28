@@ -48,14 +48,14 @@
       </a><br> -->
     <form id="reportForm">
       <input type="file" id="image-input" accept=".jpg, .jpeg, .png .svg" max-size="32MB"><br>
-      <input placeholder="Violation" id="name" type="text" maxlength="30" required><br>
+      <input placeholder="Violators Name" id="name" type="text" maxlength="30" required><br>
       <input placeholder="Reason of Report" id="reason" type="text" maxlength="20" required><br>
-<!--       <input placeholder="What Platform Were You Using (Minecraft14, google.com, etc.)" id="platform" type="text"
-        maxlength="50" required><br> -->
+      <input placeholder="What Platform Were You Using (Minecraft14, google.com, etc.)" id="platform" type="text"
+        maxlength="50" required><br>
       <!-- <input placeholder="App/Website Zymono ID" id="game" type="text" required><br> -->
-<!--       <div class="custom-dropdown">
+      <div class="custom-dropdown">
         <input placeholder="App/Website Zymono ID" type="text" id="game" name="reportTo" class="report-to-dropdown" required list="names" required>
-        <datalist id="names"> -->
+        <datalist id="names">
           <!-- <option value="John Doe"></option>
           <option value="Jane Smith"></option>
           <option value="Michael Johnson"></option> -->
@@ -88,6 +88,28 @@
     <!--   <script type="text/javascript" id="zsiqchat">var $zoho=$zoho || {};$zoho.salesiq = $zoho.salesiq || {widgetcode: "e053bff667460fb859f95c245f87047d3340a171da85957cb979ec2b856e28fa", values:{},ready:function(){}};var d=document;s=d.createElement("script");s.type="text/javascript";s.id="zsiqscript";s.defer=true;s.src="https://salesiq.zoho.com/widget";t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);</script> -->
 
   <script>
+    //EMERGENCY CODE
+    // fetch(`https://log.cosmixcom.repl.co`)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       // checkIp(ip, data.country)
+          
+    //       fetch(`https://emergencynumberapi.com/api/country/${data.country}`)
+    //     .then(response => response.json())
+    //     .then(info => {
+    //       console.log(info.dispatch)
+    //     })
+    //         // return {
+    //         //   'ip': ip,
+    //         //   'country': data.country,
+    //         //   'region': data.region,
+    //         //   'city': data.city,
+    //         //   'postal': data.postal,
+    //         //   'lat': data.latitude,
+    //         //   'long': data.longitude,
+    //         //   'cc': data.country_code
+    //         // };
+    //     });
     //MAKE NECCESSARY DARK MODE CHANGES
     const body = document.querySelector('html');
     const bgColor = getComputedStyle(body).getPropertyValue('background-color');

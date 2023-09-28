@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report User</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: var(--container-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  input[type="text"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+
+  select {
+    cursor: pointer;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .submit-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
+
+  /* Dark mode styles */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-color: #333;
+      --text-color: #fff;
+      --container-bg: #444;
+    }
+  }
+
+  .custom-dropdown {
+    position: relative;
+  }
+
+  .report-to-dropdown {
+    padding-right: 30px; /* Add space for the dropdown arrow */
+  }
+
+  .report-to-dropdown::after {
+    content: "▼"; /* Unicode downward arrow */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Report User</h2>
+  <form>
+    <label for="image">Upload Image</label>
+    <div class="file-input">
+      <input type="file" id="image" name="image" accept="image/*">
+      <label for="image">Choose Image</label>
+    </div>
+
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="reason">Reason</label>
+    <textarea id="reason" name="reason" rows="4" required></textarea>
+
+    <label for="device">Device</label>
+    <input type="text" id="device" name="device" required>
+
+    <label for="reportTo">Report To</label>
+    <div class="custom-dropdown">
+      <input type="text" id="reportTo" name="reportTo" class="report-to-dropdown" required list="names">
+      <datalist id="names">
+        <option value="John Doe"></option>
+        <option value="Jane Smith"></option>
+        <option value="Michael Johnson"></option>
+      </datalist>
+    </div>
+
+    <button type="submit" class="submit-btn">Submit Report</button>
+  </form>
+</div>
+<script>
+  const fileInput = document.getElementById("image");
+  const fileInputLabel = document.querySelector(".file-input label");
+
+  fileInput.addEventListener("change", function () {
+    if (fileInput.files.length > 0) {
+      fileInputLabel.textContent = fileInput.files[0].name;
+    } else {
+      fileInputLabel.textContent = "Choose Image";
+    }
+  });
+
+  if (localStorage.getItem("theme") === "light") {
+    document.documentElement.setAttribute("data-theme", "light");
+  } else {
+    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  }
+</script>
+</body>
+</html>
