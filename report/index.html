@@ -2,10 +2,6 @@
 <html>
 
 <head>
-  <script type="module">
-    import { checkPlans } from '/backend/account.js'
-    checkPlans()
-  </script>
   <!-- <script type="module" src="/backend/account.js">checkPlans()</script> -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 
@@ -14,7 +10,7 @@
   
   <script src="check.js" type="module">
     if (window.localStorage.getItem('uid') == null) {
-      window.location.href = '/auth/?b=' + window.location
+      window.location.href = 'https://zymono.com/auth/?b=' + window.location
     } else {
       // let mySound = new Audio('/music/welcome.mp3')
       // mySound.play()
