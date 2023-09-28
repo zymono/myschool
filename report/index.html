@@ -10,7 +10,7 @@
   
   <script src="check.js" type="module">
     if (window.localStorage.getItem('uid') == null) {
-      window.location.href = '/auth/?b=' + window.location
+      window.location.href = '/flow/signup/?b=' + window.location
     } else {
       // let mySound = new Audio('/music/welcome.mp3')
       // mySound.play()
