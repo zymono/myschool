@@ -1,0 +1,4 @@
+<script>
+  window.localStorage.setItem('tempSchool', new URLSearchParams(location.search).get('school'))
+  window.location = 'https://zymono.com/auth/?b=https://' + window.location.hostname + '/auth'
+</script>

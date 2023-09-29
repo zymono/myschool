@@ -5,5 +5,5 @@
   window.localStorage.setItem('buid', new URLSearchParams(location.search).get('uid'))
   window.localStorage.setItem('photoURL', new URLSearchParams(location.search).get('pfp'))
 
-  window.location = '/manage'
+  window.location = '/start/school.html?school=' + window.localStorage.getItem('tempSchool')
 </script>

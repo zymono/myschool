@@ -1,56 +1,92 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Zymono mySchool</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
-  <link rel="manifest" href="/manifest.json">
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(function (registration) {
-          console.log('Service Worker registered with scope:', registration.scope);
-          // if (window.localStorage.getItem('buid')) {
-          //   window.location = '/report/'
-          // } else {
-          //   window.location = '/flows/signup/'
-          // }
-        })
-        .catch(function (error) {
-          console.log('Service Worker registration failed:', error);
-        });
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report With Zymono</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            color: #fff;
+        }
 
-    if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(function(registration) {
-      registration.addEventListener('updatefound', function() {
-        const newWorker = registration.installing;
-        newWorker.addEventListener('statechange', function() {
-          if (newWorker.state === 'installed') {
-            // Prompt the user to update the page
-          }
-        });
-      });
-    })
-    .catch(function(error) {
-      console.log('Service Worker registration failed:', error);
-    });
-}
+        .container {
+            max-width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-  </script>
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+        }
+
+        textarea {
+            height: 150px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+          width: 107%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+      .emergency {
+        color: #932a2a;
+      }
+    </style>
 </head>
-
 <body>
-  <script>
-    if (window.localStorage.getItem('buid')) {
-      window.location = '/report/'
-    } else {
-      window.location = '/flows/signup/'
-    }
-  </script>
-</body>
+    <div class="container">
+      <img height="180px" src="//zymono.com/images/zymono-light.png">
+        <h2>Report</h2>
+      <p class="emergency">If There Is An Immediate Threat To Your Life, Call <u>911</u></p>
+        <form action="#" id="report">
+            <!-- <label for="reporter-name">Your Name:</label>
+            <input type="text" id="reporter-name" name="reporter-name" required> -->
+          <label for="file">Evidence:</label>
+            <input type="file" id="image-input" accept=".jpg, .jpeg, .png .svg" max-size="32MB" name="file">
+          
+            <label for="reported-name">Name of Person Being Reported:</label>
+            <input type="text" id="name" name="reported-name" required>
 
+            <label for="report-reason">Reason for Reporting:</label>
+            <textarea id="reason" name="report-reason" required></textarea>
+
+            <button type="submit" id="button">Submit Report</button>
+        </form>
+    </div>
+  <script src="script.js"></script>
+</body>
 </html>

@@ -21,8 +21,8 @@
 	<div class="main-content">
 		<i class="fa fa-check main-content__checkmark" id="checkmark"></i>
 		<p class="main-content__body" data-lead-id="main-content-body">Thanks for filing that report and helping to keep your school a safer place! You're time is greatly appreciated!
-    <!-- <br><br>
-      <p><b id="attr"></b> will be notified shortly. You can check the status of your report <a href="/ur/">here</a>. -->
+    <br><br>
+     
       <br><br>
     You may now close this page.</p>
 	</div>
@@ -30,77 +30,5 @@
 	<footer class="site-footer" id="footer">
 		<p class="site-footer__fineprint" id="fineprint">Copyright ©2023 Zymono | All Rights Reserved</p>
 	</footer>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDelFI3VdZG_0G_SEMWrmB_WKRcw3ZNWFw",
-  authDomain: "auth-e7b21.firebaseapp.com",
-  projectId: "auth-e7b21",
-  storageBucket: "auth-e7b21.appspot.com",
-  messagingSenderId: "877231972674",
-  appId: "1:877231972674:web:7a629ac207bfca644168db",
-  measurementId: "G-3CMXJWW5B6"
-};
-export default firebaseConfig;
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-import { getStorage, ref, uploadString } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
-import { getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
-    const storage = getStorage()
-    
-    document.querySelector('#attr').innerText = new URLSearchParams(location.search).get('platform')
-
-    function sendNotif(who, fn, u, r, p) {
-    
-    const get1 = `zymono/${who}/dsc.txt`
-
-    getDownloadURL(ref(storage, get1))
-    .then((url) => {
-      // // `url` is the download URL for your variable
-
-      const xhr = new XMLHttpRequest();
-
-      xhr.open('GET', url);
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          
-fetch("https://zymono-discord-notifications.cosmixcom.repl.co/dm", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer myToken"
-    },
-    body: JSON.stringify({
-        username: xhr.responseText,
-        message: {
-          user: u,
-          reason: r,
-          platform: p,
-          to: fn
-        },
-        id: xhr.responseText
-    })
-});
-          return 'working'
-          
-        } else {
-
-        }
-      };
-      xhr.onerror = function(error) {
-
-      };
-      xhr.send();
-    })
-  }
-
-    // sendNotif(new URLSearchParams(location.search).get('who'), new URLSearchParams(location.search).get('fn'), new URLSearchParams(location.search).get('u'), new URLSearchParams(location.search).get('r'), new URLSearchParams(location.search).get('p'))
-  </script>
 </body>
 </html>
